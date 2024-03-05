@@ -13,54 +13,44 @@ import { Ionicons } from "@expo/vector-icons";
 import Header from "./Header";
 import styles from "./styles";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { useState, useEffect } from "react";
-import { getRestaurant, dishesByRestaurantID } from "../../graphql/queries";
-import { generateClient } from "aws-amplify/api";
+import { useEffect } from "react";
 import { useBasketContext } from "../../context/BasketContext";
-const client = generateClient();
-
+import { useRestaurantStore } from "../../store/restaurantStore";
+import { useBasketStore } from "../../store/basketStore";
 const RestaurentDetailsPage = () => {
-  const [restaurant, setRestaurant] = useState(null);
-  const [dishes, setDishes] = useState([]);
   const route = useRoute();
   const navigation = useNavigation();
   const id = route.params?.id;
+  const getRestaurantById = useRestaurantStore(
+    (state) => state.getRestaurantById
+  );
+  const getRestaurantDish = useRestaurantStore(
+    (state) => state.getRestaurantDish
+  );
 
   const { setBasketRestaurent, basket, basketDishes } = useBasketContext();
-  const getRestaurantById = async () => {
-    const oneRestaurant = await client.graphql({
-      query: getRestaurant,
-      variables: { id: id },
-    });
-    setRestaurant(oneRestaurant.data.getRestaurant);
-  };
-
-  const getRestaurantDish = async () => {
-    const allDishs = await client.graphql({
-      query: dishesByRestaurantID,
-      variables: {
-        restaurantID: id,
-      },
-    });
-
-    setDishes(allDishs.data.dishesByRestaurantID.items);
-  };
+  const restaurant = useRestaurantStore((state) => state.restaurant);
+  const dishes = useRestaurantStore((state) => state.Dishes);
+  const loadRestaurant = useRestaurantStore((state) => state.loadRestaurant);
+  const addBasketRestaurant = useBasketStore(
+    (state) => state.addBasketRestaurant
+  );
 
   useEffect(() => {
     if (!id) {
       return;
     }
 
-    setBasketRestaurent(null);
-    getRestaurantById();
-    getRestaurantDish();
+    // setBasketRestaurent(null);
+    getRestaurantById(id);
+    getRestaurantDish(id);
   }, [id]);
 
   useEffect(() => {
-    setBasketRestaurent(restaurant);
+    addBasketRestaurant(restaurant);
   }, [restaurant]);
 
-  if (!restaurant) {
+  if (loadRestaurant) {
     return (
       <ActivityIndicator
         size={"large"}

@@ -1,16 +1,19 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ActivityIndicator } from "react-native";
 import styles from "./styles";
 
 const DEFAULT_IMAGE =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/uber-eats/restaurant2.jpeg";
 
 const RestaurentHeader = ({ restaurent }) => {
+  if (!restaurent) {
+    return <Text>Loading........</Text>;
+  }
   return (
     <View style={styles.page}>
       <Image
         source={{
-          uri: restaurent.image.startsWith("http")
-            ? restaurent.image
+          uri: restaurent?.image.startsWith("http")
+            ? restaurent?.image
             : DEFAULT_IMAGE,
         }}
         style={styles.image}

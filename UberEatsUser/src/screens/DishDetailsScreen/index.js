@@ -9,18 +9,17 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState, useEffect } from "react";
-import { getDish } from "../../graphql/queries";
-import { generateClient } from "aws-amplify/api";
 import { useBasketContext } from "../../context/BasketContext";
-
-const client = generateClient();
+import { useRestaurantStore } from "../../store/restaurantStore";
 
 const DishDetailsScreen = () => {
   const navigation = useNavigation();
-  const [dish, setDish] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const route = useRoute();
   const id = route.params?.id;
+  const fetchSingleDish = useRestaurantStore((state) => state.getDishById);
+  const dish = useRestaurantStore((state) => state.Dish);
+  const loadDish = useRestaurantStore((state) => state.loadDish);
 
   const { addDishToBasket } = useBasketContext();
 
@@ -42,22 +41,22 @@ const DishDetailsScreen = () => {
     return (dish.price * quantity).toFixed(2);
   };
 
-  const fetchSingleDish = async () => {
-    const oneDish = await client.graphql({
-      query: getDish,
-      variables: { id: id },
-    });
+  // const fetchSingleDish = async () => {
+  //   const oneDish = await client.graphql({
+  //     query: getDish,
+  //     variables: { id: id },
+  //   });
 
-    setDish(oneDish.data.getDish);
-  };
+  //   setDish(oneDish.data.getDish);
+  // };
 
   useEffect(() => {
     if (id) {
-      fetchSingleDish();
+      fetchSingleDish(id);
     }
   }, [id]);
 
-  if (!dish) {
+  if (loadDish) {
     return (
       <ActivityIndicator
         size={"large"}

@@ -37,6 +37,7 @@ const AuthContextProvider = ({ children }) => {
 
         setDbUser(allUsers.data.listUsers.items[0]);
         setLoading(false);
+        console.log("dbuser", dbUser);
       }
     } catch (e) {
       console.log(e.message);
