@@ -58,9 +58,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-    if (!isStoredRestaurants) {
-      fetchRestaurants();
-    }
+    fetchRestaurants();
   }, []);
 
   return (

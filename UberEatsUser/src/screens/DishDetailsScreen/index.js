@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useBasketContext } from "../../context/BasketContext";
 import { useRestaurantStore } from "../../store/restaurantStore";
+import { useBasketStore } from "../../store/basketStore";
 
 const DishDetailsScreen = () => {
   const navigation = useNavigation();
@@ -20,11 +21,19 @@ const DishDetailsScreen = () => {
   const fetchSingleDish = useRestaurantStore((state) => state.getDishById);
   const dish = useRestaurantStore((state) => state.Dish);
   const loadDish = useRestaurantStore((state) => state.loadDish);
+  const basket = useBasketStore((state) => state.basket);
 
-  const { addDishToBasket } = useBasketContext();
+  // const { addDishToBasket } = useBasketContext();
+  const addDishToBasket = useBasketStore((state) => state.addDishToBasket);
 
   const onAddToBasket = () => {
-    addDishToBasket(dish, quantity);
+    const payload = {
+      dish,
+      quantity,
+      basket,
+    };
+    addDishToBasket(payload);
+
     navigation.goBack();
   };
   const onMinus = () => {

@@ -5,9 +5,6 @@ const DEFAULT_IMAGE =
   "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/uber-eats/restaurant2.jpeg";
 
 const RestaurentHeader = ({ restaurent }) => {
-  if (!restaurent) {
-    return <Text>Loading........</Text>;
-  }
   return (
     <View style={styles.page}>
       <Image

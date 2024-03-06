@@ -4,10 +4,10 @@
     "slug": "UberEatsUser",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/uberEats.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/uberEats.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,21 +17,16 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/uberEats.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.nonceblox_123.UberEatsUser",
       "config": {
-        "googleMapsApiKey": "AIzaSyDFj0Pe5XlSP8ClLWaBXgD1G-AnPmMJ5Ec"
+        "googleMapsApiKey": ""
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "5dbda794-9341-449e-b7c4-2b441bead905"
-      }
     }
   }
 }

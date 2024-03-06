@@ -8,7 +8,6 @@ import amplifyconfig from "./src/aws-exports";
 import AuthContextProvider from "./src/context/AuthContext";
 import BasketContextProvider from "./src/context/BasketContext";
 import OrderContextProvider from "./src/context/OrderContext";
-
 Amplify.configure({
   ...amplifyconfig,
   Analytics: {

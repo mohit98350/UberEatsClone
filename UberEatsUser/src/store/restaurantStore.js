@@ -29,7 +29,6 @@ export const useRestaurantStore = create(
           });
           set({ restaurants: allRestaurants.data.listRestaurants.items });
           set({ isStoredRestaurants: true });
-          console.log(" RESTAURENT API CALLED");
         } catch (err) {
           Alert.alert("Error", err.message);
         }
@@ -43,9 +42,6 @@ export const useRestaurantStore = create(
             variables: { id: id },
           });
           set({ restaurant: oneRestaurant.data.getRestaurant });
-          set({ loadRestaurant: false });
-
-          console.log(" RESTAURENT ID API CALLED");
         } catch (error) {
           Alert.alert("Error", error.message);
         }
@@ -58,8 +54,9 @@ export const useRestaurantStore = create(
               restaurantID: id,
             },
           });
-          console.log("RESTAURANT DISH API CALLED");
+
           set({ Dishes: allDishs.data.dishesByRestaurantID.items });
+          set({ loadRestaurant: false });
         } catch (error) {
           Alert.alert("Error", error.message);
         }

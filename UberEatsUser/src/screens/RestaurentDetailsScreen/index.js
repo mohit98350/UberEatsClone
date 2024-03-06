@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  Image,
   FlatList,
-  StyleSheet,
   ActivityIndicator,
   Pressable,
 } from "react-native";
@@ -17,6 +15,7 @@ import { useEffect } from "react";
 import { useBasketContext } from "../../context/BasketContext";
 import { useRestaurantStore } from "../../store/restaurantStore";
 import { useBasketStore } from "../../store/basketStore";
+import { useAuthStore } from "../../store/authStore";
 const RestaurentDetailsPage = () => {
   const route = useRoute();
   const navigation = useNavigation();
@@ -28,12 +27,20 @@ const RestaurentDetailsPage = () => {
     (state) => state.getRestaurantDish
   );
 
-  const { setBasketRestaurent, basket, basketDishes } = useBasketContext();
+  // const { setBasketRestaurent, basket, basketDishes } = useBasketContext();
   const restaurant = useRestaurantStore((state) => state.restaurant);
   const dishes = useRestaurantStore((state) => state.Dishes);
   const loadRestaurant = useRestaurantStore((state) => state.loadRestaurant);
   const addBasketRestaurant = useBasketStore(
     (state) => state.addBasketRestaurant
+  );
+  const basketRestaurent = useBasketStore((state) => state.basketRestaurent);
+  const basket = useBasketStore((state) => state.basket);
+  const fetchBasketDishes = useBasketStore((state) => state.fetchBasketDishes);
+  const basketDishes = useBasketStore((state) => state.basketDishes);
+  const dbUser = useAuthStore((state) => state.dbUser);
+  const fetchAvailableBasket = useBasketStore(
+    (state) => state.fetchAvailableBasket
   );
 
   useEffect(() => {
@@ -41,14 +48,27 @@ const RestaurentDetailsPage = () => {
       return;
     }
 
-    // setBasketRestaurent(null);
     getRestaurantById(id);
     getRestaurantDish(id);
   }, [id]);
 
   useEffect(() => {
-    addBasketRestaurant(restaurant);
+    if (restaurant) {
+      addBasketRestaurant(restaurant);
+    }
   }, [restaurant]);
+
+  useEffect(() => {
+    if (dbUser && basketRestaurent) {
+      fetchAvailableBasket(dbUser, basketRestaurent);
+    }
+  }, [dbUser, basketRestaurent]);
+
+  useEffect(() => {
+    if (basket) {
+      fetchBasketDishes(basket);
+    }
+  }, [basket]);
 
   if (loadRestaurant) {
     return (

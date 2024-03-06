@@ -18,7 +18,6 @@ const BasketContextProvider = ({ children }) => {
     basketRestaurent?.deliveryFee
   );
 
-  // const totalPrices = 12;
   const fetchAvailableBasket = async () => {
     const existingBaskets = await client.graphql({
       query: listBaskets,
