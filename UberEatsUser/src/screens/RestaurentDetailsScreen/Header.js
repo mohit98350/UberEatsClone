@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ActivityIndicator } from "react-native";
 import styles from "./styles";
 
 const DEFAULT_IMAGE =
@@ -9,8 +9,8 @@ const RestaurentHeader = ({ restaurent }) => {
     <View style={styles.page}>
       <Image
         source={{
-          uri: restaurent.image.startsWith("http")
-            ? restaurent.image
+          uri: restaurent?.image.startsWith("http")
+            ? restaurent?.image
             : DEFAULT_IMAGE,
         }}
         style={styles.image}

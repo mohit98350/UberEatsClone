@@ -13,11 +13,30 @@ import { ActivityIndicator } from "react-native";
 import { useAuthContext } from "../context/AuthContext";
 import OrderLiveUpdates from "../screens/OrderLiveUpdates";
 import Success from "../screens/Success";
+import { useEffect } from "react";
+import { useAuthStore } from "../store/authStore";
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-  const { dbUser, loading } = useAuthContext();
+  // const { loading } = useAuthContext();
+  const loading = useAuthStore((state) => state.loading);
+  const currentAuthenticatedUser = useAuthStore(
+    (state) => state.currentAuthenticatedUser
+  );
+  const fetchUserBySub = useAuthStore((state) => state.fetchUserBySub);
+  const dbUser = useAuthStore((state) => state.dbUser);
+  const authUser = useAuthStore((state) => state.authUser);
+
+  useEffect(() => {
+    if (authUser) {
+      fetchUserBySub(authUser);
+    }
+  }, [authUser]);
+
+  useEffect(() => {
+    currentAuthenticatedUser();
+  }, []);
 
   if (loading) {
     return (

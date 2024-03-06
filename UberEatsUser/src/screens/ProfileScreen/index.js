@@ -2,67 +2,42 @@ import { View, Text, TextInput, StyleSheet, Button, Alert } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
-import { generateClient } from "aws-amplify/api";
-import { createUser, updateUser } from "../../graphql/mutations";
-import { useAuthContext } from "../../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+import { useAuthStore } from "../../store/authStore";
 
-const client = generateClient();
 const Profile = () => {
-  const { sub, setDbUser, dbUser } = useAuthContext();
+  const dbUser = useAuthStore((state) => state.dbUser);
+  const sub = useAuthStore((state) => state.authUser);
+  const update = useAuthStore((state) => state.updateUser);
+  const create = useAuthStore((state) => state.createUser);
   const [name, setName] = useState(dbUser?.name || "");
   const [address, setAddress] = useState(dbUser?.address || "");
   const [lat, setLat] = useState(dbUser?.lat + " " || "0");
   const [lng, setLng] = useState(dbUser?.lng + " " || "0");
-
   const { signOut } = useAuthenticator();
   const navigation = useNavigation();
 
+  const updatePayload = {
+    dbUser,
+    name,
+    address,
+    lat,
+    lng,
+  };
+  const createPayload = {
+    name,
+    address,
+    lat,
+    lng,
+    sub,
+  };
   const onSave = async () => {
     if (dbUser) {
-      await update();
+      await update(updatePayload);
     } else {
-      await create();
+      await create(createPayload);
     }
     navigation.goBack();
-  };
-
-  const update = async () => {
-    const updatedUser = await client.graphql({
-      query: updateUser,
-      variables: {
-        input: {
-          id: dbUser?.id,
-          name: name,
-          address: address,
-          lat: parseFloat(lat),
-          lng: parseFloat(lng),
-        },
-      },
-    });
-
-    setDbUser(updatedUser);
-  };
-
-  const create = async () => {
-    try {
-      const user = await client.graphql({
-        query: createUser,
-        variables: {
-          input: {
-            name: name,
-            address: address,
-            lat: parseFloat(lat),
-            lng: parseFloat(lng),
-            sub: sub,
-          },
-        },
-      });
-
-      setDbUser(user.data.createUser);
-    } catch (e) {
-      Alert.alert("Error", e.message);
-    }
   };
 
   return (

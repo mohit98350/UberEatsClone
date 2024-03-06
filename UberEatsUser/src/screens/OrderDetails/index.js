@@ -14,6 +14,7 @@ import BasketDishItem from "../../components/BasketDishItem";
 import { useOrderContext } from "../../context/OrderContext";
 import { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useOrderStore } from "../../store/orderStore";
 
 const OrderDetailsHeader = ({ order }) => {
   const navigation = useNavigation();
@@ -21,10 +22,13 @@ const OrderDetailsHeader = ({ order }) => {
   return (
     <View>
       <View style={styles.page}>
-        <Image source={{ uri: order.Restaurant.image }} style={styles.image} />
+        <Image
+          source={{ uri: order?.Restaurant?.image }}
+          style={styles.image}
+        />
 
         <View style={styles.container}>
-          <Text style={styles.title}>{order.Restaurant.name}</Text>
+          <Text style={styles.title}>{order?.Restaurant?.name}</Text>
           <View
             style={{
               flexDirection: "row",
@@ -34,7 +38,7 @@ const OrderDetailsHeader = ({ order }) => {
           >
             <View>
               <Text style={styles.subtitle}>
-                {order.status} &#8226; 2 days ago
+                {order?.status} &#8226; 2 days ago
               </Text>
             </View>
 
@@ -59,17 +63,23 @@ const OrderDetailsHeader = ({ order }) => {
 };
 
 const OrderDetails = () => {
-  const [order, setOrder] = useState();
+  // const [order, setOrder] = useState();
 
-  const { getOrders } = useOrderContext();
+  // const { getOrders } = useOrderContext();
   const route = useRoute();
   const id = route.params?.id;
+  const getOrders = useOrderStore((state) => state.getOrders);
+  const order = useOrderStore((state) => state.order);
+  const loadOrders = useOrderStore((state) => state.loadOrders);
 
   useEffect(() => {
-    getOrders(id).then(setOrder);
+    // getOrders(id).then(setOrder);
+    if (id) {
+      getOrders(id);
+    }
   }, []);
 
-  if (!order) {
+  if (loadOrders) {
     return (
       <ActivityIndicator
         size={"large"}
